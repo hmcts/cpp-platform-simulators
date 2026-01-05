@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPath": "/CP/v1/notification/application-request-notification"
+  },
+  "response": {
+    "transformers": ["application-request-notification-sent-to-cps-response-transformer"]
+  }
+}

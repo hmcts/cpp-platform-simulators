@@ -1,4 +1,4 @@
-name: CPP Context Verify & Validation
+name: CPP Library Verify & Validation
 
 # Need to update this for actual migration
 trigger: none
@@ -25,15 +25,18 @@ pool:
     - identifier -equals centos8-j17
 
 variables:
-  sonarqubeProject: "uk.gov.moj.cpp.common:common-bom"
+  sonarqubeProject: "uk.gov.justice.services:cpp-platform-simulators-parent"
 
 stages:
-  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-      - template: pipelines/platform-verify.yaml@cppAzureDevOpsTemplates
+  - ${{ if and(eq(variables['Build.Repository.Name'], 'hmcts/cpp-platform-simulators'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+      - template: pipelines/context-verify.yaml@cppAzureDevOpsTemplates
+        parameters:
+          sonarqube_project: ${{ variables['sonarqubeProject'] }}
+          sonarQubeType: 'sonarQubeAKS'
 
   - ${{ if eq(variables['Build.Reason'], 'Manual') }}:
       - template: pipelines/library-validation.yaml@cppAzureDevOpsTemplates
         parameters:
-          serviceName: 'commonbom'
+          serviceName: 'platformsimulators'
           RUN_RELEASE: ${{ parameters.RUN_RELEASE }}
           JOB_TYPE: 'library'

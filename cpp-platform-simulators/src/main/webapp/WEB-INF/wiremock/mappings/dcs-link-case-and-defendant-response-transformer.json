@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPathPattern": "/CP/dcs-outbound/v1/case/([^/]+)/defendants"
+  },
+  "response": {
+    "transformers": ["dcs-link-case-and-defendant-response-transformer"]
+  }
+}

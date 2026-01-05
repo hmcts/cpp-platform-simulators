@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPath": "/TWIF/C2IOutbound.asmx"
+  },
+  "response": {
+    "transformers": ["message-received-response-transformer"]
+  }
+}

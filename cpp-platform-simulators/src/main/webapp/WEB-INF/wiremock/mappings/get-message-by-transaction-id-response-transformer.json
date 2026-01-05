@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPattern": "/newcase\\?transaction_id=(.*)$"
+  },
+  "response": {
+    "transformers": ["get-message-by-transaction-id-response-transformer"]
+  }
+}

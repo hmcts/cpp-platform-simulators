@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPathPattern": "/message-file/\\d{2}_\\d{2}_\\d{6}_\\d{2}_.*"
+  },
+  "response": {
+    "transformers": ["get-file-response-transformer"]
+  }
+}

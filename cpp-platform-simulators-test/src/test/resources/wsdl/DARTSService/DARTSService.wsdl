@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-. -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://com.synapps.mojdarts.service.com"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DARTSService"
+             targetNamespace="http://com.synapps.mojdarts.service.com">
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="http://rt.fs.documentum.emc.com/" schemaLocation="xsd/DARTSService_schema1.xsd"/>
+        </xsd:schema>
+        <xsd:schema>
+            <xsd:import namespace="http://response.dfs.moj.synapps.com/" schemaLocation="xsd/DARTSService_schema2.xsd"/>
+        </xsd:schema>
+        <xsd:schema>
+            <xsd:import
+                namespace="http://properties.core.datamodel.fs.documentum.emc.com/" schemaLocation="xsd/DARTSService_schema3.xsd"/>
+        </xsd:schema>
+        <xsd:schema>
+            <xsd:import
+                namespace="http://core.datamodel.fs.documentum.emc.com/" schemaLocation="xsd/DARTSService_schema4.xsd"/>
+        </xsd:schema>
+        <xsd:schema>
+            <xsd:import
+                namespace="http://content.core.datamodel.fs.documentum.emc.com/" schemaLocation="xsd/DARTSService_schema5.xsd"/>
+        </xsd:schema>
+        <xsd:schema>
+            <xsd:import
+                namespace="http://com.synapps.mojdarts.service.com" schemaLocation="xsd/DARTSService_schema6.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="getCases">
+        <part element="tns:getCases" name="parameters"></part>
+    </message>
+    <message name="getCasesResponse">
+        <part element="tns:getCasesResponse" name="parameters"></part>
+    </message>
+    <message name="ServiceException">
+        <part xmlns:ns1="http://rt.fs.documentum.emc.com/" element="ns1:ServiceException"
+              name="fault"></part>
+    </message>
+    <message name="addAudio">
+        <part element="tns:addAudio" name="parameters"></part>
+    </message>
+    <message name="addAudioResponse">
+        <part element="tns:addAudioResponse" name="parameters"></part>
+    </message>
+    <message name="addCase">
+        <part element="tns:addCase" name="parameters"></part>
+    </message>
+    <message name="addCaseResponse">
+        <part element="tns:addCaseResponse" name="parameters"></part>
+    </message>
+    <message name="requestTranscription">
+        <part element="tns:requestTranscription" name="parameters"></part>
+    </message>
+    <message name="requestTranscriptionResponse">
+        <part element="tns:requestTranscriptionResponse" name="parameters"></part>
+    </message>
+    <message name="registerNode">
+        <part element="tns:registerNode" name="parameters"></part>
+    </message>
+    <message name="registerNodeResponse">
+        <part element="tns:registerNodeResponse" name="parameters"></part>
+    </message>
+    <message name="getCourtLog">
+        <part element="tns:getCourtLog" name="parameters"></part>
+    </message>
+    <message name="getCourtLogResponse">
+        <part element="tns:getCourtLogResponse" name="parameters"></part>
+    </message>
+    <message name="addLogEntry">
+        <part element="tns:addLogEntry" name="parameters"></part>
+    </message>
+    <message name="addLogEntryResponse">
+        <part element="tns:addLogEntryResponse" name="parameters"></part>
+    </message>
+    <message name="addDocument">
+        <part element="tns:addDocument" name="parameters"></part>
+    </message>
+    <message name="addDocumentResponse">
+        <part element="tns:addDocumentResponse" name="parameters"></part>
+    </message>
+    <portType name="DARTSServicePort">
+        <operation name="getCases">
+            <documentation>Get cases.
+
+                @param courthouse courthouse
+                @param courtroom courtroom
+                @param date date
+                @return cases
+            </documentation>
+            <input message="tns:getCases"></input>
+            <output message="tns:getCasesResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="addAudio">
+            <documentation>Add audio.
+
+                @param document xml document
+                @param dataPackage audio data package
+                @return response
+            </documentation>
+            <input message="tns:addAudio"></input>
+            <output message="tns:addAudioResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="addCase">
+            <documentation>Add a case.
+
+                @param document xml document
+                @return response
+            </documentation>
+            <input message="tns:addCase"></input>
+            <output message="tns:addCaseResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="requestTranscription">
+            <documentation>Request transcription.
+
+                @param document xml document
+                @return response
+            </documentation>
+            <input message="tns:requestTranscription"></input>
+            <output message="tns:requestTranscriptionResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="registerNode">
+            <documentation>Register node.
+
+                @param document xml document
+                @return response
+            </documentation>
+            <input message="tns:registerNode"></input>
+            <output message="tns:registerNodeResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="getCourtLog">
+            <documentation>Get Court log.
+
+                @param courthouse courthouse
+                @param caseNumber caseNumber
+                @param startTime startTime
+                @param endTime endTime
+                @return get court log response
+            </documentation>
+            <input message="tns:getCourtLog"></input>
+            <output message="tns:getCourtLogResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="addLogEntry">
+            <documentation>Add log entry.
+
+                @param document xml document
+                @return response
+            </documentation>
+            <input message="tns:addLogEntry"></input>
+            <output message="tns:addLogEntryResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+        <operation name="addDocument">
+            <documentation>Add an event.
+
+                @param messageId messageId
+                @param type document type
+                @param subType document subType
+                @param document xml document
+                @return response
+            </documentation>
+            <input message="tns:addDocument"></input>
+            <output message="tns:addDocumentResponse"></output>
+            <fault message="tns:ServiceException" name="ServiceException"></fault>
+        </operation>
+    </portType>
+    <binding name="DARTSServicePortBinding" type="tns:DARTSServicePort">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+        <operation name="getCases">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="addAudio">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="addCase">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="requestTranscription">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="registerNode">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="getCourtLog">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="addLogEntry">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+        <operation name="addDocument">
+            <soap:operation soapAction=""></soap:operation>
+            <input>
+                <soap:body use="literal"></soap:body>
+            </input>
+            <output>
+                <soap:body use="literal"></soap:body>
+            </output>
+            <fault name="ServiceException">
+                <soap:fault name="ServiceException" use="literal"></soap:fault>
+            </fault>
+        </operation>
+    </binding>
+    <service name="DARTSService">
+        <documentation>DARTS web services class.
+
+            @author ewingsg
+        </documentation>
+        <port binding="tns:DARTSServicePortBinding" name="DARTSServicePort">
+            <soap:address location="http://localhost:8888/DARTS"/>
+        </port>
+    </service>
+</definitions>

@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPattern": "/newcase\\?correlation_id=(.*)$"
+  },
+  "response": {
+    "transformers": ["cjse-get-message-by-correlation-id-response-transformer"]
+  }
+}

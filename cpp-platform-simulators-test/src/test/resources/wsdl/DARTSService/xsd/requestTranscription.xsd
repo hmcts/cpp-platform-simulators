@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema id="requestTranscription" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="transcription_request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="courthouse" minOccurs="1">
+        	<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="64"></xs:maxLength>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+        
+        <xs:element name="courtroom" minOccurs="0">
+        	<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="64"></xs:maxLength>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+        
+        <xs:element name="case_number" minOccurs="1">
+        	<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="64"></xs:maxLength>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:element>
+        
+        <xs:element name="start_time" minOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="Y" type="xs:integer" use="required"/>
+            <xs:attribute name="M" type="xs:integer" use="required" />
+            <xs:attribute name="D" type="xs:integer" use="required" />
+            <xs:attribute name="H" type="xs:integer" use="required" />
+            <xs:attribute name="MIN" type="xs:integer" use="required" />
+            <xs:attribute name="S" type="xs:integer" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="end_time" minOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="Y" type="xs:integer" use="required"/>
+            <xs:attribute name="M" type="xs:integer" use="required" />
+            <xs:attribute name="D" type="xs:integer" use="required" />
+            <xs:attribute name="H" type="xs:integer" use="required" />
+            <xs:attribute name="MIN" type="xs:integer" use="required" />
+            <xs:attribute name="S" type="xs:integer" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="user" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="transcription_request" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
