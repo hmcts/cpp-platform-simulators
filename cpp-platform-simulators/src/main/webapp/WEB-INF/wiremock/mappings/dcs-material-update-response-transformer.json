@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPathPattern": "/CP/dcs-outbound/v1/case/([^/]+)/material"
+  },
+  "response": {
+    "transformers": ["dcs-material-update-response-transformer"]
+  }
+}

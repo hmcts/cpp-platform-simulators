@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPattern": "/darts/runtime/ContextRegistryService\\?wsdl"
+  },
+  "response": {
+    "transformers": ["darts-service-context-registry-response-transformer"]
+  }
+}

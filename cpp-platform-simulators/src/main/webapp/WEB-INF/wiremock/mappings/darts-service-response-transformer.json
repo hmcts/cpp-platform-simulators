@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPattern": "/darts/DARTSService(\\?WSDL)?"
+  },
+  "response": {
+    "transformers": ["darts-service-response-transformer"]
+  }
+}

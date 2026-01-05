@@ -1,0 +1,8 @@
+{
+  "request": {
+    "url": "/cps/message-list"
+  },
+  "response": {
+    "transformers": ["cps-todays-message-list-response-transformer"]
+  }
+}

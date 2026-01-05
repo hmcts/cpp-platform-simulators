@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPath": "/CJSE/message"
+  },
+  "response": {
+    "transformers": ["cjse-message-received-response-transformer"]
+  }
+}

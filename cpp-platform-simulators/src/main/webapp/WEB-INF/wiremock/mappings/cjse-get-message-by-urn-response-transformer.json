@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPattern": "/newcase\\?urn=([\\da-zA-Z]*)&family_name=([a-zA-Z]*)$"
+  },
+  "response": {
+    "transformers": ["cjse-get-message-by-urn-response-transformer"]
+  }
+}

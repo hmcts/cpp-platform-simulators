@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>uk.gov.moj.cpp.common</groupId>
+        <artifactId>service-parent-pom</artifactId>
+        <version>17.101.1</version>
+    </parent>
+    <groupId>uk.gov.justice.services</groupId>
+    <artifactId>cpp-platform-simulators-parent</artifactId>
+    <version>17.0.18-SNAPSHOT</version>
+
+    <modules>
+        <module>cpp-platform-simulators-extensions</module>
+        <module>cpp-platform-simulators</module>
+        <module>cpp-platform-simulators-test</module>
+    </modules>
+
+
+    <name>CPP Platform Simulators</name>
+    <description>Service for exposing a simulator for cpp.api integration testing</description>
+
+    <properties>
+        <jgitflow.versionTagPrefix>v</jgitflow.versionTagPrefix>
+        <cxf.version>3.4.4</cxf.version>
+        <api.dcs.schema.pojo.version>0.9.3</api.dcs.schema.pojo.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>2.27.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <attachClasses>true</attachClasses>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.3922</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

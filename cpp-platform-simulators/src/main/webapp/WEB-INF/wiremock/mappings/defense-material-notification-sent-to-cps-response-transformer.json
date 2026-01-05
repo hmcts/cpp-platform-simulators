@@ -1,0 +1,8 @@
+{
+  "request": {
+    "urlPath": "/CP/v1/notification/material-notification"
+  },
+  "response": {
+    "transformers": ["defense-material-notification-sent-to-cps-response-transformer"]
+  }
+}

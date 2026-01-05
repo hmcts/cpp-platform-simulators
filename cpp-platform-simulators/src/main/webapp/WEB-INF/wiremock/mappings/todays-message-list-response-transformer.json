@@ -1,0 +1,8 @@
+{
+  "request": {
+    "url": "/message-list?date=today"
+  },
+  "response": {
+    "transformers": ["todays-message-list-response-transformer"]
+  }
+}
