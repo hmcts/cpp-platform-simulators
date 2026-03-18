@@ -1,5 +1,4 @@
 This project builds a simulators for cpp platform
-
 The war file should be deployed to wildfly where the simulator is needed
 
 # Local testing
