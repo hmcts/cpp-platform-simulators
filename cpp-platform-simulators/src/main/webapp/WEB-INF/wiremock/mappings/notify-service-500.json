@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/(simulator/)?v2/notifications/letter"
+  },
+  "response": {
+    "status": 0,
+    "body": " javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake"
+  }
+}
