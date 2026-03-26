@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPathPattern": "/(simulator/)?v2/notifications/letter"
+    "urlPathPattern": "/v2/notifications/letter"
   },
   "response": {
     "status": 0,
