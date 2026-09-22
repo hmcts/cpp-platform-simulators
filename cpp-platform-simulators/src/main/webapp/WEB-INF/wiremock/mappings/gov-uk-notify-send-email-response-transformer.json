@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v2/notifications/email"
+  },
+  "response": {
+    "transformers": ["gov-uk-notify-send-email-response-transformer"]
+  }
+}

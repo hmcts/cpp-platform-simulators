@@ -18,6 +18,8 @@ import uk.gov.justice.dcs.tramsformer.DcsDefenceRepresentationResponseTransforme
 import uk.gov.justice.dcs.tramsformer.DcsDefendantUpdateResponseTransformer;
 import uk.gov.justice.dcs.tramsformer.DcsLinkCaseAndDefendantResponseTransformer;
 import uk.gov.justice.dcs.tramsformer.DcsMaterialUpdateResponseTransformer;
+import uk.gov.justice.govuknotify.GovUkNotifyGetStatusResponseTransformer;
+import uk.gov.justice.govuknotify.GovUkNotifySendEmailResponseTransformer;
 import uk.gov.justice.twiff.transformer.GetMessageByTransactionIdResponseTransformer;
 import uk.gov.justice.twiff.transformer.GetMessageResponseTransformer;
 import uk.gov.justice.twiff.transformer.MessageReceivedResponseTransformer;
@@ -60,6 +62,8 @@ public class SimulatorsWarConfiguration extends WarConfiguration {
             extensionMap.put(DcsDefendantUpdateResponseTransformer.DCS_DEFENDANT_UPDATE_RESPONSE_TRANSFORMER, new DcsDefendantUpdateResponseTransformer());
             extensionMap.put(DcsDefenceRepresentationResponseTransformer.DCS_DEFENCE_REPRESENTATION_RESPONSE_TRANSFORMER, new DcsDefenceRepresentationResponseTransformer());
             extensionMap.put(DcsMaterialUpdateResponseTransformer.DCS_MATERIAL_UPDATE_RESPONSE_TRANSFORMER, new DcsMaterialUpdateResponseTransformer());
+            extensionMap.put(GovUkNotifySendEmailResponseTransformer.GOV_UK_NOTIFY_SEND_EMAIL_RESPONSE_TRANSFORMER, new GovUkNotifySendEmailResponseTransformer());
+            extensionMap.put(GovUkNotifyGetStatusResponseTransformer.GOV_UK_NOTIFY_GET_STATUS_RESPONSE_TRANSFORMER, new GovUkNotifyGetStatusResponseTransformer());
             return extensionMap;
         }
 
