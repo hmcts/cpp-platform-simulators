@@ -49,6 +49,7 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
     private static final String TEMPLATE_URI = "https://api.notifications.service.gov.uk/services/%s/templates/%s";
     private static final String NOTIFICATION_URI = "https://api.notifications.service.gov.uk/v2/notifications/%s";
     private static final String SERVICE_USER_ID = "d43135e4-fff3-45df-9a7e-bc7018a4a589";
+    private static final String PERSONALISATION = "personalisation";
     private static final String REQUIRED_PERSONALISATION_KEY = "material_url";
 
     private static final String PERM_FAIL_ADDRESS = "perm-fail@simulator.notify";
@@ -83,11 +84,11 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
     }
 
     private static boolean hasRequiredPersonalisation(final JsonObject body) {
-        if (!body.containsKey("personalisation")
-                || body.get("personalisation").getValueType() != JsonValue.ValueType.OBJECT) {
+        if (!body.containsKey(PERSONALISATION)
+                || body.get(PERSONALISATION).getValueType() != JsonValue.ValueType.OBJECT) {
             return false;
         }
-        final JsonObject personalisation = body.getJsonObject("personalisation");
+        final JsonObject personalisation = body.getJsonObject(PERSONALISATION);
         if (!personalisation.containsKey(REQUIRED_PERSONALISATION_KEY)) {
             return false;
         }

@@ -40,7 +40,10 @@ public class GovUkNotifySendEmailResponseTransformerTest {
     private static final String BASE = "http://localhost:" + PORT;
     private static final String EMAIL_PATH = "/v2/notifications/email";
     private static final String STATUS_PATH_REGEX = "/v2/notifications/[0-9a-fA-F-]{36}";
+    private static final String NOTIFICATIONS_PATH = "/v2/notifications/";
     private static final String BEARER = "Bearer dummy.jwt.token";
+    private static final String ORDINARY_RECIPIENT = "someone@example.com";
+    private static final String STATUS = "status";
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(options().port(PORT).extensions(
@@ -63,20 +66,20 @@ public class GovUkNotifySendEmailResponseTransformerTest {
 
     @Test
     public void shouldAcceptSendAndReportDeliveredForOrdinaryRecipient() throws IOException {
-        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("someone@example.com", MaterialUrl.STRING), BEARER);
+        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.STRING), BEARER);
 
         assertThat(send.status(), is(201));
         final String notificationId = json(send.body()).getString("id");
         assertThat(notificationId, notNullValue());
 
-        final Response poll = SimpleHttp.get(BASE + "/v2/notifications/" + notificationId, BEARER);
+        final Response poll = SimpleHttp.get(BASE + NOTIFICATIONS_PATH + notificationId, BEARER);
         assertThat(poll.status(), is(200));
-        assertThat(json(poll.body()).getString("status"), is("delivered"));
+        assertThat(json(poll.body()).getString(STATUS), is("delivered"));
     }
 
     @Test
     public void shouldAcceptSendWhenMaterialUrlIsAnAttachmentObject() throws IOException {
-        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("someone@example.com", MaterialUrl.OBJECT), BEARER);
+        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.OBJECT), BEARER);
 
         assertThat(send.status(), is(201));
     }
@@ -86,8 +89,8 @@ public class GovUkNotifySendEmailResponseTransformerTest {
         final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("perm-fail@simulator.notify", MaterialUrl.STRING), BEARER);
         final String notificationId = json(send.body()).getString("id");
 
-        final Response poll = SimpleHttp.get(BASE + "/v2/notifications/" + notificationId, BEARER);
-        assertThat(json(poll.body()).getString("status"), is("permanent-failure"));
+        final Response poll = SimpleHttp.get(BASE + NOTIFICATIONS_PATH + notificationId, BEARER);
+        assertThat(json(poll.body()).getString(STATUS), is("permanent-failure"));
     }
 
     @Test
@@ -95,13 +98,13 @@ public class GovUkNotifySendEmailResponseTransformerTest {
         final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("temp-fail@simulator.notify", MaterialUrl.STRING), BEARER);
         final String notificationId = json(send.body()).getString("id");
 
-        final Response poll = SimpleHttp.get(BASE + "/v2/notifications/" + notificationId, BEARER);
-        assertThat(json(poll.body()).getString("status"), is("temporary-failure"));
+        final Response poll = SimpleHttp.get(BASE + NOTIFICATIONS_PATH + notificationId, BEARER);
+        assertThat(json(poll.body()).getString(STATUS), is("temporary-failure"));
     }
 
     @Test
     public void shouldRejectSendMissingMaterialUrlPersonalisationWith400() throws IOException {
-        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("someone@example.com", MaterialUrl.NONE), BEARER);
+        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.NONE), BEARER);
 
         assertThat(send.status(), is(400));
         assertThat(json(send.body()).getInt("status_code"), is(400));
@@ -112,7 +115,7 @@ public class GovUkNotifySendEmailResponseTransformerTest {
     public void shouldRejectSendWithNoPersonalisationBlockWith400() throws IOException {
         final String body = createObjectBuilder()
                 .add("template_id", UUID.randomUUID().toString())
-                .add("email_address", "someone@example.com")
+                .add("email_address", ORDINARY_RECIPIENT)
                 .build().toString();
 
         final Response send = SimpleHttp.post(BASE + EMAIL_PATH, body, BEARER);
@@ -122,7 +125,7 @@ public class GovUkNotifySendEmailResponseTransformerTest {
 
     @Test
     public void shouldRejectSendWithNoAuthorizationHeaderWith403() throws IOException {
-        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("someone@example.com", MaterialUrl.STRING), null);
+        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.STRING), null);
 
         assertThat(send.status(), is(403));
         assertThat(json(send.body()).getJsonArray("errors").getJsonObject(0).getString("error"), is("AuthError"));
@@ -130,7 +133,7 @@ public class GovUkNotifySendEmailResponseTransformerTest {
 
     @Test
     public void shouldRejectSendWithNonBearerAuthorizationWith403() throws IOException {
-        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody("someone@example.com", MaterialUrl.STRING), "Basic dXNlcjpwYXNz");
+        final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.STRING), "Basic dXNlcjpwYXNz");
 
         assertThat(send.status(), is(403));
     }
