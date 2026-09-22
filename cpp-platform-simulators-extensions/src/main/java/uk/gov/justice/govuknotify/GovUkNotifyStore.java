@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
  */
 public final class GovUkNotifyStore {
 
-    public static final String NOTIFY_DIR = "/tmp/NotifyMessages";
+    /** Under the JVM temp dir (not a hardcoded public path) — per-pod, transient correlation only. */
+    public static final String NOTIFY_DIR =
+            Paths.get(System.getProperty("java.io.tmpdir"), "NotifyMessages").toString();
     private static final String DEFAULT_STATUS = "delivered";
     private static final Logger LOGGER = LoggerFactory.getLogger(GovUkNotifyStore.class);
 
