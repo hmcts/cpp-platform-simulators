@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/search/places/v1/find",
+    "queryParameters": {
+      "query": { "equalTo": "HANGAR 125" },
+      "maxresults": { "absent": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "bodyFileName": "os-places-success-body.json"
+  }
+}
