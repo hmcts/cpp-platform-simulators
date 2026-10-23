@@ -10,6 +10,6 @@
   "response": {
     "status": 200,
     "headers": { "Content-Type": "application/json" },
-    "bodyFileName": "os-places-success-body_luton.json"
+    "bodyFileName": "os-places-success-body-luton.json"
   }
 }
