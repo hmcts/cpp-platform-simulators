@@ -2,10 +2,19 @@ package uk.gov.justice.govuknotify;
 
 import static javax.json.Json.createArrayBuilder;
 import static javax.json.Json.createObjectBuilder;
+import static javax.json.Json.createReader;
+
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Enforces the parts of the real Gov.UK Notify request contract that must be present for a call to be
@@ -23,6 +32,7 @@ import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 public final class GovUkNotifyContract {
 
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(GovUkNotifyContract.class);
 
     private GovUkNotifyContract() {
     }
@@ -43,19 +53,42 @@ public final class GovUkNotifyContract {
         return null;
     }
 
-    private static ResponseDefinition forbidden(final String message) {
+    /**
+     * @return a Gov.UK Notify error response — {@code {"errors":[{"error","message"}],"status_code"}}, the
+     * shape every real Notify error takes — with that HTTP status.
+     */
+    public static ResponseDefinition errorResponse(final int status, final String error, final String message) {
         final String body = createObjectBuilder()
                 .add("errors", createArrayBuilder()
                         .add(createObjectBuilder()
-                                .add("error", "AuthError")
+                                .add("error", error)
                                 .add("message", message)))
-                .add("status_code", 403)
+                .add("status_code", status)
                 .build().toString();
 
         return new ResponseDefinitionBuilder()
-                .withStatus(403)
+                .withStatus(status)
                 .withHeader("Content-Type", "application/json")
                 .withBody(body)
                 .build();
+    }
+
+    /**
+     * @return the request's JSON body, or an empty object when there is none or it cannot be parsed, so a
+     * malformed request is refused by the same field checks as one that omits the fields.
+     */
+    public static JsonObject requestBody(final Request request) {
+        final byte[] raw = request.getBody();
+        final String json = (raw == null || raw.length == 0) ? "{}" : new String(raw, StandardCharsets.UTF_8);
+        try (JsonReader reader = createReader(new StringReader(json))) {
+            return reader.readObject();
+        } catch (final RuntimeException e) {
+            LOGGER.warn("Gov.UK Notify simulator: could not parse request body, treating as empty", e);
+            return createObjectBuilder().build();
+        }
+    }
+
+    private static ResponseDefinition forbidden(final String message) {
+        return errorResponse(403, "AuthError", message);
     }
 }

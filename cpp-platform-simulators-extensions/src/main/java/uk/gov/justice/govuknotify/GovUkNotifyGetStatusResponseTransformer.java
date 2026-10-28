@@ -9,6 +9,8 @@ import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.json.JsonObjectBuilder;
+
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.extension.Parameters;
@@ -20,9 +22,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Simulates {@code GET /v2/notifications/{id}} on the Gov.UK Notify API — the status poll the client
- * makes after a send. Replays the delivery status recorded by
- * {@link GovUkNotifySendEmailResponseTransformer} against this id (see {@link GovUkNotifyStore}), so
- * the outcome the send request selected (via its recipient address) is what the poll reports.
+ * makes after a send. Replays the status recorded against this id (see {@link GovUkNotifyStore}) by
+ * {@link GovUkNotifySendEmailResponseTransformer} (the outcome its recipient address selected) or
+ * {@link GovUkNotifySendPrecompiledLetterResponseTransformer} (the next status of the letter's
+ * lifecycle), answering as an email or a letter accordingly.
  */
 public class GovUkNotifyGetStatusResponseTransformer extends ResponseDefinitionTransformer {
 
@@ -43,23 +46,32 @@ public class GovUkNotifyGetStatusResponseTransformer extends ResponseDefinitionT
         }
 
         final String notificationId = extractId(request.getUrl());
-        final String status = GovUkNotifyStore.readStatus(notificationId);
-        LOGGER.info("Gov.UK Notify simulator: status poll for '{}' -> '{}'", notificationId, status);
+        final GovUkNotifyStore.Polled polled = GovUkNotifyStore.poll(notificationId);
+        LOGGER.info("Gov.UK Notify simulator: status poll for {} '{}' -> '{}'",
+                polled.getType(), notificationId, polled.getStatus());
 
         final String now = ZonedDateTime.now(UTC).toString();
         final String templateId = randomUUID().toString();
 
-        final String body = createObjectBuilder()
+        final JsonObjectBuilder builder = createObjectBuilder()
                 .add("id", notificationId)
-                .add("type", "email")
-                .add("status", status)
-                .add("email_address", "simulated@simulator.notify")
+                .add("type", polled.getType())
+                .add("status", polled.getStatus());
+        if (polled.isLetter()) {
+            builder.add("line_1", "Provided as PDF")
+                    .add("postage", polled.getPostage())
+                    .add("body", "")
+                    .add("subject", "Pre-compiled PDF");
+        } else {
+            builder.add("email_address", "simulated@simulator.notify")
+                    .add("body", "Simulated notification")
+                    .add("subject", "Gov.UK Notify simulator");
+        }
+        final String body = builder
                 .add("template", createObjectBuilder()
                         .add("id", templateId)
                         .add("version", 1)
                         .add("uri", format(TEMPLATE_URI, SERVICE_USER_ID, templateId)))
-                .add("body", "Simulated notification")
-                .add("subject", "Gov.UK Notify simulator")
                 .add("created_at", now)
                 .add("sent_at", now)
                 .add("completed_at", now)

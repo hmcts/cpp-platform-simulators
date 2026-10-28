@@ -3,7 +3,7 @@ This project builds a simulators for cpp platform
 The war file should be deployed to wildfly where the simulator is needed
 
 # Simulated APIs
-* [Gov.UK Notify simulator](docs/gov-uk-notify-simulator.md) — email send + status endpoints, and how the send/delivery outcomes are controlled
+* [Gov.UK Notify simulator](docs/gov-uk-notify-simulator.md) — email and precompiled-letter send + status endpoints, and how the send/delivery outcomes are controlled
 
 # Local testing
 * To test this component locally, build the project using mvn clean package or install and then execute below command to copy and deploy the war to local wildfly server running as a docker container

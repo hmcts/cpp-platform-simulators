@@ -2,15 +2,9 @@ package uk.gov.justice.govuknotify;
 
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
-import static javax.json.Json.createArrayBuilder;
 import static javax.json.Json.createObjectBuilder;
-import static javax.json.Json.createReader;
-
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
@@ -64,7 +58,7 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
             return authError;
         }
 
-        final JsonObject body = parseBody(request);
+        final JsonObject body = GovUkNotifyContract.requestBody(request);
 
         if (!hasRequiredPersonalisation(body)) {
             LOGGER.info("Gov.UK Notify simulator: request missing '{}' personalisation -> 400 BadRequestError",
@@ -142,30 +136,7 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
     }
 
     private ResponseDefinition badRequest() {
-        final String responseBody = createObjectBuilder()
-                .add("errors", createArrayBuilder()
-                        .add(createObjectBuilder()
-                                .add("error", "BadRequestError")
-                                .add("message", "Missing personalisation: material_url")))
-                .add("status_code", 400)
-                .build().toString();
-
-        return new ResponseDefinitionBuilder()
-                .withStatus(400)
-                .withHeader("Content-Type", "application/json")
-                .withBody(responseBody)
-                .build();
-    }
-
-    private JsonObject parseBody(final Request request) {
-        final byte[] raw = request.getBody();
-        final String json = (raw == null || raw.length == 0) ? "{}" : new String(raw, StandardCharsets.UTF_8);
-        try (JsonReader reader = createReader(new StringReader(json))) {
-            return reader.readObject();
-        } catch (final RuntimeException e) {
-            LOGGER.warn("Gov.UK Notify simulator: could not parse request body, treating as empty", e);
-            return createObjectBuilder().build();
-        }
+        return GovUkNotifyContract.errorResponse(400, "BadRequestError", "Missing personalisation: material_url");
     }
 
     @Override
