@@ -2,7 +2,6 @@ package uk.gov.justice.govuknotify;
 
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
-import static javax.json.Json.createArrayBuilder;
 import static javax.json.Json.createObjectBuilder;
 import static javax.json.Json.createReader;
 
@@ -142,19 +141,7 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
     }
 
     private ResponseDefinition badRequest() {
-        final String responseBody = createObjectBuilder()
-                .add("errors", createArrayBuilder()
-                        .add(createObjectBuilder()
-                                .add("error", "BadRequestError")
-                                .add("message", "Missing personalisation: material_url")))
-                .add("status_code", 400)
-                .build().toString();
-
-        return new ResponseDefinitionBuilder()
-                .withStatus(400)
-                .withHeader("Content-Type", "application/json")
-                .withBody(responseBody)
-                .build();
+        return GovUkNotifyContract.errorResponse(400, "BadRequestError", "Missing personalisation: material_url");
     }
 
     private JsonObject parseBody(final Request request) {

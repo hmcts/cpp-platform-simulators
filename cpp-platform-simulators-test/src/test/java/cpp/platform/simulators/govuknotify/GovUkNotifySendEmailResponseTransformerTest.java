@@ -75,6 +75,7 @@ public class GovUkNotifySendEmailResponseTransformerTest {
         final Response poll = SimpleHttp.get(BASE + NOTIFICATIONS_PATH + notificationId, BEARER);
         assertThat(poll.status(), is(200));
         assertThat(json(poll.body()).getString(STATUS), is("delivered"));
+        assertThat(json(poll.body()).getString("type"), is("email"));
     }
 
     @Test

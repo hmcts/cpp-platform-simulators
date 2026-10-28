@@ -43,19 +43,27 @@ public final class GovUkNotifyContract {
         return null;
     }
 
-    private static ResponseDefinition forbidden(final String message) {
+    /**
+     * @return a Gov.UK Notify error response — {@code {"errors":[{"error","message"}],"status_code"}}, the
+     * shape every real Notify error takes — with that HTTP status.
+     */
+    public static ResponseDefinition errorResponse(final int status, final String error, final String message) {
         final String body = createObjectBuilder()
                 .add("errors", createArrayBuilder()
                         .add(createObjectBuilder()
-                                .add("error", "AuthError")
+                                .add("error", error)
                                 .add("message", message)))
-                .add("status_code", 403)
+                .add("status_code", status)
                 .build().toString();
 
         return new ResponseDefinitionBuilder()
-                .withStatus(403)
+                .withStatus(status)
                 .withHeader("Content-Type", "application/json")
                 .withBody(body)
                 .build();
+    }
+
+    private static ResponseDefinition forbidden(final String message) {
+        return errorResponse(403, "AuthError", message);
     }
 }
