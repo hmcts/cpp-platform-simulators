@@ -3,9 +3,7 @@ package uk.gov.justice.govuknotify;
 import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 import static javax.json.Json.createObjectBuilder;
-import static javax.json.Json.createReader;
 
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -13,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
@@ -80,7 +77,7 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformer extends Respons
             return authError;
         }
 
-        final JsonObject body = parseBody(request);
+        final JsonObject body = GovUkNotifyContract.requestBody(request);
         final String reference = stringOrEmpty(body, REFERENCE);
         if (reference.isEmpty()) {
             return validationError("reference is a required property");
@@ -155,17 +152,6 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformer extends Respons
     private static ResponseDefinition validationError(final String message) {
         LOGGER.info("Gov.UK Notify simulator: rejecting letter with 400 ValidationError ({})", message);
         return GovUkNotifyContract.errorResponse(400, "ValidationError", message);
-    }
-
-    private static JsonObject parseBody(final Request request) {
-        final byte[] raw = request.getBody();
-        final String json = (raw == null || raw.length == 0) ? "{}" : new String(raw, StandardCharsets.UTF_8);
-        try (JsonReader reader = createReader(new StringReader(json))) {
-            return reader.readObject();
-        } catch (final RuntimeException e) {
-            LOGGER.warn("Gov.UK Notify simulator: could not parse letter request body, treating as empty", e);
-            return createObjectBuilder().build();
-        }
     }
 
     @Override

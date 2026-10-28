@@ -50,6 +50,12 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
     private static final String STATUS = "status";
     private static final String POSTAGE = "postage";
     private static final String ORDINARY_LETTER = "Dear recipient";
+    private static final String REFERENCE = "reference";
+    private static final String FIRST_CLASS = "first";
+    private static final String SECOND_CLASS = "second";
+    private static final String PENDING_VIRUS_CHECK = "pending-virus-check";
+    private static final String ACCEPTED = "accepted";
+    private static final String RECEIVED = "received";
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(options().port(PORT).extensions(
@@ -78,27 +84,27 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
         assertThat(send.status(), is(201));
         final JsonObject created = json(send.body());
         assertThat(created.getString("id"), notNullValue());
-        assertThat(created.getString("reference"), is(reference));
-        assertThat(created.getString(POSTAGE), is("second"));
+        assertThat(created.getString(REFERENCE), is(reference));
+        assertThat(created.getString(POSTAGE), is(SECOND_CLASS));
 
         final String notificationId = created.getString("id");
         final JsonObject firstPoll = poll(notificationId);
         assertThat(firstPoll.getString("type"), is("letter"));
-        assertThat(firstPoll.getString(POSTAGE), is("second"));
-        assertThat(firstPoll.getString(STATUS), is("pending-virus-check"));
-        assertThat(poll(notificationId).getString(STATUS), is("accepted"));
-        assertThat(poll(notificationId).getString(STATUS), is("received"));
-        assertThat(poll(notificationId).getString(STATUS), is("received"));
+        assertThat(firstPoll.getString(POSTAGE), is(SECOND_CLASS));
+        assertThat(firstPoll.getString(STATUS), is(PENDING_VIRUS_CHECK));
+        assertThat(poll(notificationId).getString(STATUS), is(ACCEPTED));
+        assertThat(poll(notificationId).getString(STATUS), is(RECEIVED));
+        assertThat(poll(notificationId).getString(STATUS), is(RECEIVED));
     }
 
     @Test
     public void shouldAcceptAFirstClassLetterAndReportItsPostage() throws IOException {
         final Response send = SimpleHttp.post(BASE + LETTER_PATH,
-                letterBody(UUID.randomUUID().toString(), pdf(ORDINARY_LETTER), "first"), BEARER);
+                letterBody(UUID.randomUUID().toString(), pdf(ORDINARY_LETTER), FIRST_CLASS), BEARER);
 
         assertThat(send.status(), is(201));
-        assertThat(json(send.body()).getString(POSTAGE), is("first"));
-        assertThat(poll(json(send.body()).getString("id")).getString(POSTAGE), is("first"));
+        assertThat(json(send.body()).getString(POSTAGE), is(FIRST_CLASS));
+        assertThat(poll(json(send.body()).getString("id")).getString(POSTAGE), is(FIRST_CLASS));
     }
 
     @Test
@@ -107,7 +113,7 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
                 letterBody(UUID.randomUUID().toString(), pdf("simulator.notify:validation-failed"), null), BEARER);
         final String notificationId = json(send.body()).getString("id");
 
-        assertThat(poll(notificationId).getString(STATUS), is("pending-virus-check"));
+        assertThat(poll(notificationId).getString(STATUS), is(PENDING_VIRUS_CHECK));
         assertThat(poll(notificationId).getString(STATUS), is("validation-failed"));
         assertThat(poll(notificationId).getString(STATUS), is("validation-failed"));
     }
@@ -118,9 +124,9 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
                 letterBody(UUID.randomUUID().toString(), pdf("simulator.notify:accepted"), null), BEARER);
         final String notificationId = json(send.body()).getString("id");
 
-        assertThat(poll(notificationId).getString(STATUS), is("pending-virus-check"));
-        assertThat(poll(notificationId).getString(STATUS), is("accepted"));
-        assertThat(poll(notificationId).getString(STATUS), is("accepted"));
+        assertThat(poll(notificationId).getString(STATUS), is(PENDING_VIRUS_CHECK));
+        assertThat(poll(notificationId).getString(STATUS), is(ACCEPTED));
+        assertThat(poll(notificationId).getString(STATUS), is(ACCEPTED));
     }
 
     @Test
@@ -156,13 +162,13 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
 
         final JsonObject polled = poll(notificationId);
         assertThat(polled.getString("type"), is("letter"));
-        assertThat(polled.getString(STATUS), is("received"));
-        assertThat(polled.getString(POSTAGE), is("second"));
+        assertThat(polled.getString(STATUS), is(RECEIVED));
+        assertThat(polled.getString(POSTAGE), is(SECOND_CLASS));
     }
 
     @Test
     public void shouldRejectALetterWithoutContentWith400() throws IOException {
-        final String body = createObjectBuilder().add("reference", UUID.randomUUID().toString()).build().toString();
+        final String body = createObjectBuilder().add(REFERENCE, UUID.randomUUID().toString()).build().toString();
         final Response send = SimpleHttp.post(BASE + LETTER_PATH, body, BEARER);
 
         assertThat(send.status(), is(400));
@@ -208,7 +214,7 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
         final Response send = SimpleHttp.post(BASE + LETTER_PATH,
                 letterBody(UUID.randomUUID().toString(), pdf("simulator.notify:" + outcome), null), BEARER);
         final String notificationId = json(send.body()).getString("id");
-        assertThat(poll(notificationId).getString(STATUS), is("pending-virus-check"));
+        assertThat(poll(notificationId).getString(STATUS), is(PENDING_VIRUS_CHECK));
         return poll(notificationId).getString(STATUS);
     }
 
@@ -220,7 +226,7 @@ public class GovUkNotifySendPrecompiledLetterResponseTransformerTest {
     private static String letterBody(final String reference, final String content, final String postage) {
         final JsonObjectBuilder body = createObjectBuilder().add("content", content);
         if (reference != null) {
-            body.add("reference", reference);
+            body.add(REFERENCE, reference);
         }
         if (postage != null) {
             body.add(POSTAGE, postage);
