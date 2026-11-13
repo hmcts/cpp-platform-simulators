@@ -1,9 +1,10 @@
 {
+  "name": "OS Places find - prefix of 'NEWCASTLE' (min 3 chars, case-insensitive)",
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "NEWCASTLE" },
+      "query": { "matches": "(?i)NEW(C(A(S(T(L(E)?)?)?)?)?)?" },
       "maxresults": { "absent": true }
     }
   },

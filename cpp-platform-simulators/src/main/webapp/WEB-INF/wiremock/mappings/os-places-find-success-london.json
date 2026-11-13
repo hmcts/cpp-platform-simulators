@@ -1,9 +1,10 @@
 {
+  "name": "OS Places find - prefix of '8 LONDON ROAD' (min 3 chars, case-insensitive)",
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "8 LONDON ROAD" },
+      "query": { "matches": "(?i)8 L(O(N(D(O(N( (R(O(A(D)?)?)?)?)?)?)?)?)?)?" },
       "maxresults": { "absent": true }
     }
   },

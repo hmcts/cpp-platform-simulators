@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "unauthorized street" },
+      "query": { "equalTo": "unauthorized street", "caseInsensitive": true },
       "maxresults": { "absent": true }
     }
   },
