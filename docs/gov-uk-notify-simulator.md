@@ -39,6 +39,16 @@ Two independent levers decide the outcome (once the request contract above is sa
 2. **Delivery status** — for an accepted send, the eventual polled status is driven by the **recipient
    address**, using Gov.UK Notify's own reserved simulator addresses. The chosen status is recorded
    against the minted notification id and replayed by the status poll.
+3. **Personalisation marker** — for a caller whose recipient is fixed by configuration (so a test cannot
+   use a reserved address), any **string** personalisation value containing
+   `simulator.notify:<status>` (case-insensitive) makes the polled status that failure. `<status>` must be
+   one of Gov.UK Notify's email failure statuses: `permanent-failure`, `temporary-failure` or
+   `technical-failure`; anything else is ignored. A reserved recipient address takes precedence, and
+   attachment objects (e.g. `material_url` from `prepareUpload`) are not scanned. Like the letter PDF
+   marker, this is a simulator-only lever with no meaning to the real service. Example: staging-dvla's
+   D20 email subject ends with the defendant's name, so an API test that creates a defendant surnamed
+   `simulator.notify:permanent-failure` (34 chars, within the 35-char surname limit) drives that email
+   to **FAILED**.
 
 | Caller scenario | Request to simulator | Simulator response | Consumer outcome |
 |---|---|---|---|
@@ -47,6 +57,7 @@ Two independent levers decide the outcome (once the request contract above is sa
 | permanent failure (no attachment) | `material_url` absent | `400 BadRequestError` | **FAILED** (permanent) |
 | recipient `perm-fail@simulator.notify` | `material_url` present | `201`; poll → `permanent-failure` | **FAILED** |
 | recipient `temp-fail@simulator.notify` | `material_url` present | `201`; poll → `temporary-failure` | **FAILED** |
+| a personalisation string contains `simulator.notify:permanent-failure` / `temporary-failure` / `technical-failure` | `material_url` present | `201`; poll → that status | **FAILED** |
 | any other recipient | `material_url` present | `201`; poll → `delivered` | **SENT** |
 
 ## Letter behaviour (precompiled PDF)

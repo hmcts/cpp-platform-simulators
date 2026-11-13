@@ -4,6 +4,10 @@ import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static javax.json.Json.createObjectBuilder;
 
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonValue;
@@ -33,6 +37,12 @@ import org.slf4j.LoggerFactory;
  *       {@code temp-fail@simulator.notify} -> {@code temporary-failure}, anything else ->
  *       {@code delivered}. The chosen status is stored against the minted notification id
  *       ({@link GovUkNotifyStore}) for the status-poll transformer to replay.</li>
+ *   <li><b>Personalisation marker</b> — for callers whose recipient is fixed by configuration (e.g.
+ *       staging-dvla's D20 email), any personalisation string value containing
+ *       {@code simulator.notify:<status>} (case-insensitive), where status is one of Gov.UK Notify's email
+ *       failure statuses ({@code permanent-failure}, {@code temporary-failure}, {@code technical-failure}),
+ *       makes the polled status that failure. This mirrors the letter simulator's PDF marker and, like it,
+ *       has no meaning to the real service; a reserved recipient address takes precedence over it.</li>
  * </ol>
  */
 public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionTransformer {
@@ -48,6 +58,10 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
 
     private static final String PERM_FAIL_ADDRESS = "perm-fail@simulator.notify";
     private static final String TEMP_FAIL_ADDRESS = "temp-fail@simulator.notify";
+    private static final String DELIVERED = "delivered";
+
+    private static final Pattern OUTCOME_MARKER = Pattern.compile(
+            "simulator\\.notify:(permanent-failure|temporary-failure|technical-failure)", Pattern.CASE_INSENSITIVE);
 
     @Override
     public ResponseDefinition transform(final Request request, final ResponseDefinition responseDefinition,
@@ -67,7 +81,10 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
         }
 
         final String emailAddress = body.getString("email_address", "");
-        final String status = statusForRecipient(emailAddress);
+        final String recipientStatus = statusForRecipient(emailAddress);
+        final String status = DELIVERED.equals(recipientStatus)
+                ? statusForPersonalisationMarker(body.getJsonObject(PERSONALISATION))
+                : recipientStatus;
 
         final String notificationId = randomUUID().toString();
         GovUkNotifyStore.saveStatus(notificationId, status);
@@ -107,8 +124,22 @@ public class GovUkNotifySendEmailResponseTransformer extends ResponseDefinitionT
             case TEMP_FAIL_ADDRESS:
                 return "temporary-failure";
             default:
-                return "delivered";
+                return DELIVERED;
         }
+    }
+
+    // Only string values are searched: material_url may be an attachment object whose base64 content
+    // must not be scanned for a marker.
+    private static String statusForPersonalisationMarker(final JsonObject personalisation) {
+        for (final JsonValue value : personalisation.values()) {
+            if (value.getValueType() == JsonValue.ValueType.STRING) {
+                final Matcher marker = OUTCOME_MARKER.matcher(((JsonString) value).getString());
+                if (marker.find()) {
+                    return marker.group(1).toLowerCase(Locale.ROOT);
+                }
+            }
+        }
+        return DELIVERED;
     }
 
     private ResponseDefinition created(final String notificationId, final JsonObject requestBody) {
