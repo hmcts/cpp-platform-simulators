@@ -11,6 +11,6 @@
   "response": {
     "status": 200,
     "headers": { "Content-Type": "application/json" },
-    "bodyFileName": "os-places-success-body-hanger.json"
+    "bodyFileName": "os-places-success-body-hangar.json"
   }
 }
