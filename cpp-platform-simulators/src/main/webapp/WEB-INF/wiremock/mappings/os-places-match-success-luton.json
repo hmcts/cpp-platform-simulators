@@ -1,11 +1,12 @@
 {
-  "name": "OS Places match - prefix of '1 LUTON STREET' (min 3 chars, case-insensitive)",
+  "name": "OS Places match - prefix of '1 LUTON STREET' (min 3 chars, case-insensitive, trailing text allowed)",
+  "priority": 1,
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "matches": "(?i)1 L(U(T(O(N( (S(T(R(E(E(T)?)?)?)?)?)?)?)?)?)?)?" },
-      "maxresults": { "equalTo": "1" }
+      "query": { "matches": "(?i)1 L(U(T(O(N( (S(T(R(E(E(T.*)?)?)?)?)?)?)?)?)?)?)?" },
+      "minMatch": { "matches": ".+" }
     }
   },
   "response": {

@@ -1,11 +1,12 @@
 {
-  "name": "OS Places match - prefix of '1 CAPLE ROAD' (min 3 chars, case-insensitive)",
+  "name": "OS Places match - prefix of '1 CAPLE ROAD' (min 3 chars, case-insensitive, trailing text allowed)",
+  "priority": 1,
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "matches": "(?i)1 C(A(P(L(E( (R(O(A(D)?)?)?)?)?)?)?)?)?" },
-      "maxresults": { "equalTo": "1" }
+      "query": { "matches": "(?i)1 C(A(P(L(E( (R(O(A(D.*)?)?)?)?)?)?)?)?)?" },
+      "minMatch": { "matches": ".+" }
     }
   },
   "response": {
