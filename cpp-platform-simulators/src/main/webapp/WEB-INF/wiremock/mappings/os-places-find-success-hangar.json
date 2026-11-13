@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "HANGAR 125" },
+      "query": { "equalTo": "HANGAR 125", "caseInsensitive": true },
       "maxresults": { "absent": true }
     }
   },

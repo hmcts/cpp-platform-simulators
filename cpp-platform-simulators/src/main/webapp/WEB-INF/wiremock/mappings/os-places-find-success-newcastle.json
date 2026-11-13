@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "NEWCASTLE" },
+      "query": { "equalTo": "NEWCASTLE", "caseInsensitive": true },
       "maxresults": { "absent": true }
     }
   },

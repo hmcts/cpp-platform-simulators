@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "LEICESTER HOUSE" },
+      "query": { "equalTo": "LEICESTER HOUSE", "caseInsensitive": true },
       "maxresults": { "equalTo": "1" }
     }
   },

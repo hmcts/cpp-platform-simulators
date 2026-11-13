@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "1 LUTON STREET" },
+      "query": { "equalTo": "1 LUTON STREET", "caseInsensitive": true },
       "maxresults": { "equalTo": "1" }
     }
   },
