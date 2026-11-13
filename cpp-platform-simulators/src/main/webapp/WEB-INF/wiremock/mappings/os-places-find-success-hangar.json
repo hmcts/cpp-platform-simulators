@@ -1,9 +1,10 @@
 {
+  "name": "OS Places find - prefix of 'HANGAR 125' (min 3 chars, case-insensitive)",
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "HANGAR 125", "caseInsensitive": true },
+      "query": { "matches": "(?i)HAN(G(A(R( (1(2(5)?)?)?)?)?)?)?" },
       "maxresults": { "absent": true }
     }
   },

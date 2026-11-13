@@ -1,9 +1,10 @@
 {
+  "name": "OS Places find - prefix of 'LEICESTER HOUSE' (min 3 chars, case-insensitive)",
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "LEICESTER HOUSE", "caseInsensitive": true },
+      "query": { "matches": "(?i)LEI(C(E(S(T(E(R( (H(O(U(S(E)?)?)?)?)?)?)?)?)?)?)?)?" },
       "maxresults": { "absent": true }
     }
   },

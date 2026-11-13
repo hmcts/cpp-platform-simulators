@@ -1,9 +1,10 @@
 {
+  "name": "OS Places find - prefix of '10 Downing Street' (min 3 chars, case-insensitive)",
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "10 Downing Street", "caseInsensitive": true },
+      "query": { "matches": "(?i)10 (D(o(w(n(i(n(g( (S(t(r(e(e(t)?)?)?)?)?)?)?)?)?)?)?)?)?)?" },
       "maxresults": { "absent": true }
     }
   },
