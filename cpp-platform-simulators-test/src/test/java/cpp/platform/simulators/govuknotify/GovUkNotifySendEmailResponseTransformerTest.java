@@ -104,6 +104,55 @@ public class GovUkNotifySendEmailResponseTransformerTest {
     }
 
     @Test
+    public void shouldReportPermanentFailureWhenPersonalisationCarriesMarker() throws IOException {
+        assertThat(polledStatusForSubject("DVLA Driver Notification - simulator.notify:permanent-failure, Fred"),
+                is("permanent-failure"));
+    }
+
+    @Test
+    public void shouldReportTemporaryFailureWhenPersonalisationCarriesMarker() throws IOException {
+        assertThat(polledStatusForSubject("simulator.notify:temporary-failure"), is("temporary-failure"));
+    }
+
+    @Test
+    public void shouldReportTechnicalFailureWhenPersonalisationCarriesMarker() throws IOException {
+        assertThat(polledStatusForSubject("simulator.notify:technical-failure"), is("technical-failure"));
+    }
+
+    @Test
+    public void shouldMatchPersonalisationMarkerIgnoringCase() throws IOException {
+        assertThat(polledStatusForSubject("DVLA Driver Notification - SIMULATOR.NOTIFY:PERMANENT-FAILURE, FRED"),
+                is("permanent-failure"));
+    }
+
+    @Test
+    public void shouldReportDeliveredWhenPersonalisationMarkerNamesNoFailureStatus() throws IOException {
+        assertThat(polledStatusForSubject("simulator.notify:delivered-later"), is("delivered"));
+    }
+
+    @Test
+    public void shouldNotScanAttachmentObjectForPersonalisationMarker() throws IOException {
+        final String body = createObjectBuilder()
+                .add("template_id", UUID.randomUUID().toString())
+                .add("email_address", ORDINARY_RECIPIENT)
+                .add("personalisation", createObjectBuilder()
+                        .add("material_url", createObjectBuilder()
+                                .add("file", "simulator.notify:permanent-failure")
+                                .add("filename", "document.pdf")))
+                .build().toString();
+
+        assertThat(polledStatus(SimpleHttp.post(BASE + EMAIL_PATH, body, BEARER)), is("delivered"));
+    }
+
+    @Test
+    public void shouldPreferReservedRecipientOverPersonalisationMarker() throws IOException {
+        final String body = sendBody("temp-fail@simulator.notify", MaterialUrl.STRING,
+                "simulator.notify:permanent-failure");
+
+        assertThat(polledStatus(SimpleHttp.post(BASE + EMAIL_PATH, body, BEARER)), is("temporary-failure"));
+    }
+
+    @Test
     public void shouldRejectSendMissingMaterialUrlPersonalisationWith400() throws IOException {
         final Response send = SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.NONE), BEARER);
 
@@ -141,8 +190,25 @@ public class GovUkNotifySendEmailResponseTransformerTest {
 
     private enum MaterialUrl { STRING, OBJECT, NONE }
 
+    private static String polledStatusForSubject(final String subject) throws IOException {
+        return polledStatus(SimpleHttp.post(BASE + EMAIL_PATH, sendBody(ORDINARY_RECIPIENT, MaterialUrl.STRING, subject), BEARER));
+    }
+
+    private static String polledStatus(final Response send) throws IOException {
+        assertThat(send.status(), is(201));
+        final String notificationId = json(send.body()).getString("id");
+        return json(SimpleHttp.get(BASE + NOTIFICATIONS_PATH + notificationId, BEARER).body()).getString(STATUS);
+    }
+
     private static String sendBody(final String emailAddress, final MaterialUrl materialUrl) {
+        return sendBody(emailAddress, materialUrl, null);
+    }
+
+    private static String sendBody(final String emailAddress, final MaterialUrl materialUrl, final String subject) {
         final JsonObjectBuilder personalisation = createObjectBuilder();
+        if (subject != null) {
+            personalisation.add("subject", subject);
+        }
         if (materialUrl == MaterialUrl.STRING) {
             personalisation.add("material_url", "https://example.com/document.pdf");
         } else if (materialUrl == MaterialUrl.OBJECT) {
