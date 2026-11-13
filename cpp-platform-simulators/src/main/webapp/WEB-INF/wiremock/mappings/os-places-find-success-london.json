@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "8 LONDON ROAD" },
+      "query": { "equalTo": "8 LONDON ROAD", "caseInsensitive": true },
       "maxresults": { "absent": true }
     }
   },

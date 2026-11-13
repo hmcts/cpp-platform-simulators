@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "equalTo": "1 CAPLE ROAD" },
+      "query": { "equalTo": "1 CAPLE ROAD", "caseInsensitive": true },
       "maxresults": { "absent": true }
     }
   },

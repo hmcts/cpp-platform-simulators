@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/postcode",
     "queryParameters": {
-      "postcode": { "equalTo": "ZZ99 1AA" }
+      "postcode": { "equalTo": "ZZ99 1AA", "caseInsensitive": true }
     }
   },
   "response": {

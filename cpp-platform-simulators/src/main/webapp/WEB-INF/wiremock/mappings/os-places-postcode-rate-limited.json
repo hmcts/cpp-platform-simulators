@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPath": "/search/places/v1/postcode",
     "queryParameters": {
-      "postcode": { "equalTo": "SW1A 3AA" }
+      "postcode": { "equalTo": "SW1A 3AA", "caseInsensitive": true }
     }
   },
   "response": {
