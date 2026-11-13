@@ -1,11 +1,12 @@
 {
-  "name": "OS Places match - prefix of 'NEWCASTLE' (min 3 chars, case-insensitive)",
+  "name": "OS Places match - prefix of 'NEWCASTLE' (min 3 chars, case-insensitive, trailing text allowed)",
+  "priority": 1,
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
-      "query": { "matches": "(?i)NEW(C(A(S(T(L(E)?)?)?)?)?)?" },
-      "maxresults": { "equalTo": "1" }
+      "query": { "matches": "(?i)NEW(C(A(S(T(L(E.*)?)?)?)?)?)?" },
+      "minMatch": { "matches": ".+" }
     }
   },
   "response": {

@@ -1,10 +1,11 @@
 {
+  "priority": 1,
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
       "query": { "equalTo": "rate limited street", "caseInsensitive": true },
-      "maxresults": { "equalTo": "1" }
+      "minMatch": { "matches": ".+" }
     }
   },
   "response": {
