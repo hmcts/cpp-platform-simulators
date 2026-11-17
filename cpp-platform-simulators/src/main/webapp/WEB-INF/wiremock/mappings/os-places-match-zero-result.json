@@ -1,11 +1,10 @@
 {
-  "priority": 1,
   "request": {
     "method": "GET",
     "urlPath": "/search/places/v1/find",
     "queryParameters": {
       "query": { "equalTo": "complete nonsense address", "caseInsensitive": true },
-      "minMatch": { "matches": ".+" }
+      "maxresults": { "equalTo": "1" }
     }
   },
   "response": {
